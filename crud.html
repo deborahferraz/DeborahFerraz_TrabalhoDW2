@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Painel do Gerente - Pixel Peach</title>
+  <link rel="stylesheet" href="assets/css/lojinha.css">
+  <style>
+    .crud-container {
+      max-width: 800px;
+      margin: 60px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      background: linear-gradient(to right, #f43b47, #453a94);
+      --background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+    input, select, button {
+      padding: 8px;
+      margin: 5px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    .actions button {
+      margin-right: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="crud-container">
+    <h2>🛠️ Painel do Gerente</h2>
+
+    <form id="productForm">
+      <input type="hidden" id="editId">
+      <input type="text" id="name" placeholder="Nome do produto" required>
+      <input type="number" id="price" placeholder="Preço (R$)" step="0.01" required>
+      <input type="text" id="category" placeholder="Categoria (ex: blusas, vestidos)" required>
+      <input type="text" id="img" placeholder="Caminho da imagem (ex: ./imagens/produto.png)" required>
+      <label><input type="checkbox" id="promo"> Promoção</label>
+      <button type="submit">Salvar Produto</button>
+    </form>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Preço</th>
+          <th>Categoria</th>
+          <th>Promo</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="productTableBody"></tbody>
+    </table>
+  </div>
+
+  <script>
+    // Proteção de acesso
+    const user = JSON.parse(localStorage.getItem("currentUser"));
+    if (!user || user.role !== "gerente") {
+      alert("Acesso restrito ao gerente.");
+      window.location.href = "index.html";
+    }
+
+    const products = JSON.parse(localStorage.getItem("adminProducts")) || [];
+
+    function saveProducts() {
+      localStorage.setItem("adminProducts", JSON.stringify(products));
+    }
+
+    function renderTable() {
+  const tbody = document.getElementById("productTableBody");
+  tbody.innerHTML = "";
+  products.forEach((p, i) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${p.name}</td>
+      <td>R$ ${parseFloat(p.price).toFixed(2)}</td>
+      <td>${p.category}</td>
+      <td>${p.promo ? "Sim" : "Não"}</td>
+      <td class="actions">
+        <button onclick="editProduct(${i})">✏️ Editar</button>
+        <button onclick="deleteProduct(${i})">🗑️ Excluir</button>
+      </td>
+    `; // ← Crase de encerramento aqui
+    tbody.appendChild(row);
+  }); // ← Fecha o forEach
+} // ← Fecha a função renderTable
+
+
+    function editProduct(index) {
+      const p = products[index];
+      document.getElementById("editId").value = index;
+      document.getElementById("name").value = p.name;
+      document.getElementById("price").value = p.price;
+      document.getElementById("category").value = p.category;
+      document.getElementById("img").value = p.img;
+      document.getElementById("promo").checked = p.promo;
+    }
+
+    function deleteProduct(index) {
+      if (confirm("Tem certeza que deseja excluir este produto?")) {
+        products.splice(index, 1);
+        saveProducts();
+        renderTable();
+      }
+    }
+
+    document.getElementById("productForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const id = document.getElementById("editId").value;
+      const name = document.getElementById("name").value.trim();
+      const price = parseFloat(document.getElementById("price").value);
+      const category = document.getElementById("category").value.trim();
+      const img = document.getElementById("img").value.trim();
+      const promo = document.getElementById("promo").checked;
+
+      const product = { name, price, category, img, promo };
+
+      if (id === "") {
+        products.push(product);
+      } else {
+        products[id] = product;
+      }
+
+      saveProducts();
+      renderTable();
+      this.reset();
+      document.getElementById("editId").value = "";
+    });
+
+    renderTable();
+        
+  </script>
+</body>
+</html>
