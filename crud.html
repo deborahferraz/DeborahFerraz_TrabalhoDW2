@@ -41,6 +41,16 @@
     .actions button {
       margin-right: 5px;
     }
+    .export-btn {
+      margin-top: 20px;
+      background: linear-gradient(to right, #11998e, #38ef7d);
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 20px;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -56,6 +66,8 @@
       <label><input type="checkbox" id="promo"> Promoção</label>
       <button type="submit">Salvar Produto</button>
     </form>
+
+    <button class="export-btn" onclick="exportarCSV()">📥 Exportar Contas (CSV)</button>
 
     <table>
       <thead>
@@ -86,24 +98,23 @@
     }
 
     function renderTable() {
-  const tbody = document.getElementById("productTableBody");
-  tbody.innerHTML = "";
-  products.forEach((p, i) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${p.name}</td>
-      <td>R$ ${parseFloat(p.price).toFixed(2)}</td>
-      <td>${p.category}</td>
-      <td>${p.promo ? "Sim" : "Não"}</td>
-      <td class="actions">
-        <button onclick="editProduct(${i})">✏️ Editar</button>
-        <button onclick="deleteProduct(${i})">🗑️ Excluir</button>
-      </td>
-    `; // ← Crase de encerramento aqui
-    tbody.appendChild(row);
-  }); // ← Fecha o forEach
-} // ← Fecha a função renderTable
-
+      const tbody = document.getElementById("productTableBody");
+      tbody.innerHTML = "";
+      products.forEach((p, i) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${p.name}</td>
+          <td>R$ ${parseFloat(p.price).toFixed(2)}</td>
+          <td>${p.category}</td>
+          <td>${p.promo ? "Sim" : "Não"}</td>
+          <td class="actions">
+            <button onclick="editProduct(${i})">✏️ Editar</button>
+            <button onclick="deleteProduct(${i})">🗑️ Excluir</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
 
     function editProduct(index) {
       const p = products[index];
@@ -146,8 +157,30 @@
       document.getElementById("editId").value = "";
     });
 
+    function exportarCSV() {
+      const users = JSON.parse(localStorage.getItem("users")) || [];
+      if (users.length === 0) {
+        alert("Nenhum usuário cadastrado para exportar.");
+        return;
+      }
+
+      let csv = "Nome,CPF,Nascimento,Email,Senha,Cidade,Estado,Rua,Número,CEP\n";
+      users.forEach(user => {
+        const { name, cpf, birthdate, email, password, endereco } = user;
+        csv += `${name},${cpf},${birthdate},${email},${endereco.cidade},${endereco.estado},${endereco.rua},${endereco.numero},${endereco.cep}\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", "usuarios.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
     renderTable();
-        
   </script>
 </body>
 </html>
