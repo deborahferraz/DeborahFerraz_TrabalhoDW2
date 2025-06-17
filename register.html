@@ -44,7 +44,6 @@
 </head>
 <body>
   <div class="form-container">
-    <h2>📝 Criar Conta</h2>
     <p>Você está criando uma conta :)</p>
     <input type="text" id="name" placeholder="Nome completo" required>
     <input type="text" id="cpf" placeholder="CPF (somente números)" maxlength="11" required>
@@ -75,77 +74,44 @@
   </div>
 
   <script>
-  function register() {
-    const name = document.getElementById("name").value.trim();
-    const cpf = document.getElementById("cpf").value.trim();
-    const birthdate = document.getElementById("birthdate").value;
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value;
-    const cidade = document.getElementById("cidade").value.trim();
-    const estado = document.getElementById("estado").value;
-    const rua = document.getElementById("rua").value.trim();
-    const numero = document.getElementById("numero").value.trim();
-    const cep = document.getElementById("cep").value.trim();
-
-    const letrasRegex = /^[A-Za-zÀ-ÿ\s]+$/;
-    const numerosRegex = /^[0-9]+$/;
-
-    if (!letrasRegex.test(name)) {
-      alert("Nome só pode conter letras e espaços.");
-      return;
+    function register() {
+      const name = document.getElementById("name").value.trim();
+      const cpf = document.getElementById("cpf").value.trim();
+      const birthdate = document.getElementById("birthdate").value;
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const cidade = document.getElementById("cidade").value.trim();
+      const estado = document.getElementById("estado").value;
+      const rua = document.getElementById("rua").value.trim();
+      const numero = document.getElementById("numero").value.trim();
+      const cep = document.getElementById("cep").value.trim();
+  
+      const letrasRegex = /^[A-Za-zÀ-ÿ\\s]+$/;
+      const numerosRegex = /^[0-9]+$/;
+  
+      if (!letrasRegex.test(name)) return alert("Nome só pode conter letras e espaços.");
+      if (!numerosRegex.test(cpf) || cpf.length !== 11) return alert("CPF deve conter exatamente 11 números.");
+      if (!letrasRegex.test(cidade)) return alert("Cidade deve conter apenas letras.");
+      if (!letrasRegex.test(rua)) return alert("Rua deve conter apenas letras.");
+      if (!numerosRegex.test(cep) || cep.length !== 8) return alert("CEP deve conter exatamente 8 números.");
+      if (!email || !password || !birthdate || !estado || !numero) return alert("Preencha todos os campos obrigatórios.");
+  
+      const users = JSON.parse(localStorage.getItem("users")) || [];
+      if (users.some(user => user.email === email)) return alert("Este e-mail já está cadastrado!");
+  
+      const role = email === "admin@pixelpeach.com" ? "gerente" : "cliente";
+  
+      const newUser = {
+        name, cpf, birthdate, email, password, role,
+        endereco: { cidade, estado, rua, numero, cep }
+      };
+  
+      users.push(newUser);
+      localStorage.setItem("users", JSON.stringify(users));
+      alert("Conta criada com sucesso!");
+      window.location.href = "login.html";
     }
-
-    if (!numerosRegex.test(cpf) || cpf.length !== 11) {
-      alert("CPF deve conter exatamente 11 números.");
-      return;
-    }
-
-    if (!letrasRegex.test(cidade)) {
-      alert("Cidade deve conter apenas letras.");
-      return;
-    }
-
-    if (!letrasRegex.test(rua)) {
-      alert("Rua deve conter apenas letras.");
-      return;
-    }
-
-    if (!numerosRegex.test(cep) || cep.length !== 8) {
-      alert("CEP deve conter exatamente 8 números.");
-      return;
-    }
-
-    if (!email || !password || !birthdate || !estado || !numero) {
-      alert("Por favor, preencha todos os campos obrigatórios.");
-      return;
-    }
-
-    // Carrega os usuários existentes
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-
-    // Verifica se já existe email cadastrado
-    const emailExists = users.some(user => user.email === email);
-    if (emailExists) {
-      alert("Este e-mail já está cadastrado!");
-      return;
-    }
-
-    const newUser = {
-  name, cpf, birthdate, email, password, role,
-  endereco: { cidade, estado, rua, numero, cep }
-};
-
-    
-
-
-    users.push(newUser); // Adiciona novo usuário à lista
-    localStorage.setItem("users", JSON.stringify(users)); // Salva tudo no localStorage
-    alert("Conta criada com sucesso!");
-    window.location.href = "login.html";
-  }
-  const role = email === "admin@pixelpeach.com" ? "gerente" : "cliente";
-
-</script>
-
+  </script>
+  
 </body>
 </html>
