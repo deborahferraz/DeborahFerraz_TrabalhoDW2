@@ -49,7 +49,6 @@
 </head>
 <body>
   <div class="form-container">
-    <h2>🔐 Login</h2>
     <input type="email" id="email" placeholder="E-mail" required>
     <input type="password" id="password" placeholder="Senha" required>
     <button onclick="login()">Entrar</button>
@@ -58,17 +57,20 @@
   </div>
   <script>
     function login() {
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value;
-      const users = JSON.parse(localStorage.getItem("users")) || [];
-      const userFound = users.find(user => user.email === email && user.password === password);
-      if (!userFound) return alert("E-mail ou senha incorretos!");
-      localStorage.setItem("loggedIn", "true");
-      localStorage.setItem("currentUser", JSON.stringify(userFound));
-      alert(`Bem-vindo(a), ${userFound.name}!`);
-      window.location.href = "index.html";
-    }
-    localStorage.setItem("currentUser", JSON.stringify(userFound));
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+
+  const userFound = users.find(user => user.email === email && user.password === password);
+
+  if (!userFound) return alert("E-mail ou senha incorretos!");
+
+  localStorage.setItem("loggedIn", "true");
+  localStorage.setItem("currentUser", JSON.stringify(userFound));
+  alert(`Bem-vindo(a), ${userFound.name}!`);
+  window.location.href = "index.html";
+}
 
   </script>
 </body>
