@@ -4,183 +4,632 @@
   <meta charset="UTF-8" />
   <title>Painel do Gerente - Pixel Peach</title>
   <link rel="stylesheet" href="assets/css/lojinha.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    .crud-container {
-      max-width: 800px;
-      margin: 60px auto;
-      background: #fff;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .header-admin {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .header-admin h1 {
+      color: white;
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .header-admin .subtitle {
+      text-align: center;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 1.1rem;
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 30px;
+      left: 30px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .admin-container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .form-section {
+      background: rgba(255, 255, 255, 0.95);
       padding: 30px;
       border-radius: 20px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      backdrop-filter: blur(10px);
     }
-    h2 {
+
+    .form-section h2 {
+      color: #333;
+      margin-bottom: 25px;
+      font-size: 1.8rem;
       text-align: center;
-      margin-bottom: 20px;
-      background: linear-gradient(to right, #f43b47, #453a94);
-      --background-clip: text;
+      background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+      -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
-    table {
-      width: 100%;
-      border-collapse: collapse;
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
       margin-bottom: 20px;
     }
-    table, th, td {
-      border: 1px solid #ddd;
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
     }
-    th, td {
-      padding: 10px;
-      text-align: left;
+
+    .form-group label {
+      font-weight: 500;
+      color: #555;
+      margin-bottom: 8px;
     }
+
     input, select, button {
-      padding: 8px;
-      margin: 5px 0;
-      border-radius: 8px;
-      border: 1px solid #ccc;
+      padding: 12px 15px;
+      border: 2px solid #e1e8ed;
+      border-radius: 12px;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      font-family: 'Poppins', sans-serif;
     }
-    .actions button {
-      margin-right: 5px;
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
     }
-    .export-btn {
-      margin-top: 20px;
-      background: linear-gradient(to right, #11998e, #38ef7d);
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+    }
+
+    .img-preview {
+      max-height: 120px;
+      border-radius: 12px;
+      margin-top: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .btn-primary {
+      background: linear-gradient(45deg, #667eea, #764ba2);
       color: white;
-      font-weight: bold;
       border: none;
-      border-radius: 20px;
-      padding: 10px 20px;
+      padding: 15px 30px;
+      border-radius: 25px;
       cursor: pointer;
+      font-weight: 600;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .products-section {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    .products-section h2 {
+      color: #333;
+      margin-bottom: 30px;
+      font-size: 1.8rem;
+      text-align: center;
+      background: linear-gradient(45deg, #764ba2, #667eea);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .category-section {
+      margin-bottom: 40px;
+    }
+
+    .category-header {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+      color: white;
+      padding: 15px 25px;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+    }
+
+    .category-header h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+
+    .category-count {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
+
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+      border-color: #667eea;
+    }
+
+    .product-image {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 15px;
+    }
+
+    .product-info h4 {
+      color: #333;
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .product-price {
+      color: #667eea;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .product-promo {
+      display: inline-block;
+      background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-bottom: 15px;
+    }
+
+    .product-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-edit {
+      background: linear-gradient(45deg, #74b9ff, #0984e3);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      flex: 1;
+    }
+
+    .btn-edit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(116, 185, 255, 0.4);
+    }
+
+    .btn-delete {
+      background: linear-gradient(45deg, #ff7675, #d63031);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      flex: 1;
+    }
+
+    .btn-delete:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255, 118, 117, 0.4);
+    }
+
+    .empty-category {
+      text-align: center;
+      color: #888;
+      font-style: italic;
+      padding: 40px;
+      background: #f8f9fa;
+      border-radius: 12px;
+      border: 2px dashed #ddd;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 20px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .products-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
   </style>
 </head>
 <body>
-  <div class="crud-container">
-    <h2>🛠️ Painel do Gerente</h2>
+  <button class="back-btn" onclick="window.location.href='index.html'">← Voltar</button>
 
-    <form id="productForm">
-      <input type="hidden" id="editId">
-      <input type="text" id="name" placeholder="Nome do produto" required>
-      <input type="number" id="price" placeholder="Preço (R$)" step="0.01" required>
-      <input type="text" id="category" placeholder="Categoria (ex: blusas, vestidos)" required>
-      <input type="text" id="img" placeholder="Caminho da imagem (ex: ./imagens/produto.png)" required>
-      <label><input type="checkbox" id="promo"> Promoção</label>
-      <button type="submit">Salvar Produto</button>
-    </form>
+  <div class="admin-container">
+    <div class="header-admin">
+      <h1>🛠️ Painel do Gerente</h1>
+      <p class="subtitle">Gerencie seus produtos com facilidade</p>
+    </div>
 
-    <button class="export-btn" onclick="exportarCSV()">📥 Exportar Contas (CSV)</button>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number" id="totalProducts">0</div>
+        <div class="stat-label">Total de Produtos</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="promoProducts">0</div>
+        <div class="stat-label">Em Promoção</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="totalCategories">5</div>
+        <div class="stat-label">Categorias</div>
+      </div>
+    </div>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Nome</th>
-          <th>Preço</th>
-          <th>Categoria</th>
-          <th>Promo</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody id="productTableBody"></tbody>
-    </table>
+    <div class="form-section">
+      <h2>✨ Adicionar/Editar Produto</h2>
+      <form id="productForm">
+        <input type="hidden" id="editId">
+        
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="name">Nome do Produto</label>
+            <input type="text" id="name" placeholder="Ex: Camiseta Básica" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="price">Preço (R$)</label>
+            <input type="number" id="price" placeholder="0.00" step="0.01" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="category">Categoria</label>
+            <select id="category" required>
+              <option value="">Escolha a categoria</option>
+              <option value="blusas">👚 Blusas</option>
+              <option value="calcas">👖 Calças</option>
+              <option value="saias">👗 Saias</option>
+              <option value="vestidos">💃 Vestidos</option>
+              <option value="acessorios">💎 Acessórios</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="imgInput">Imagem do Produto</label>
+            <input type="file" id="imgInput" accept="image/*">
+            <img id="imgPreview" src="" alt="Preview" class="img-preview" style="display:none;">
+          </div>
+        </div>
+        
+        <div class="checkbox-group">
+          <input type="checkbox" id="promo">
+          <label for="promo">🔥 Produto em promoção</label>
+        </div>
+        
+        <button type="submit" class="btn-primary">💾 Salvar Produto</button>
+      </form>
+    </div>
+
+    <div class="products-section">
+      <h2>📦 Produtos por Categoria</h2>
+      <div id="categoriesContainer"></div>
+    </div>
   </div>
 
   <script>
-    // Proteção de acesso
+    // Verificar se é gerente
     const user = JSON.parse(localStorage.getItem("currentUser"));
     if (!user || user.role !== "gerente") {
       alert("Acesso restrito ao gerente.");
       window.location.href = "index.html";
     }
 
-    const products = JSON.parse(localStorage.getItem("adminProducts")) || [];
+    // Produtos base + produtos adicionados pelo admin
+    const baseProducts = [
+      { id: 1, name: "Camiseta Preta", category: "blusas", price: 59.90, promo: true, img: "./assets/imagens/CamisetaPreta.png" },
+      { id: 2, name: "Calça Jeans", category: "calcas", price: 89.90, promo: true, img: "./assets/imagens/CalçaJeans.png" },
+      { id: 3, name: "Jaqueta de Couro", category: "blusas", price: 149.90, promo: false, img: "./assets/imagens/JaquetaCouro.png" },
+      { id: 4, name: "Vestido Floral", category: "vestidos", price: 79.90, promo: true, img: "./assets/imagens/VestidoFloral.png" },
+      { id: 5, name: "Saia Plissada", category: "saias", price: 69.90, promo: false, img: "./assets/imagens/SaiaPlissada.png" },
+      { id: 6, name: "Colar de Coração", category: "acessorios", price: 29.90, promo: false, img: "./assets/imagens/ColarCoracao.png" },
+      { id: 7, name: "Brinco de Pérola", category: "acessorios", price: 19.90, promo: false, img: "./assets/imagens/BrincoPerola.png" },
+      { id: 8, name: "Macacão Jeans", category: "calcas", price: 129.90, promo: false, img: "./assets/imagens/MacacaoJeans.png" },
+      { id: 9, name: "Top Canelado", category: "blusas", price: 39.90, promo: false, img: "./assets/imagens/Cropped.png" },
+      { id: 10, name: "Vestido Longo", category: "vestidos", price: 99.90, promo: false, img: "./assets/imagens/VestidoLongo.png" }
+    ];
+
+    let allProducts = [...baseProducts];
+    const adminProducts = JSON.parse(localStorage.getItem("adminProducts")) || [];
+    
+    // Adicionar produtos do admin com IDs únicos
+    adminProducts.forEach(product => {
+      const maxId = Math.max(...allProducts.map(p => p.id), 0);
+      allProducts.push({ ...product, id: maxId + 1 });
+    });
+
+    const imgInput = document.getElementById("imgInput");
+    const imgPreview = document.getElementById("imgPreview");
+
+    // Preview da imagem
+    imgInput.addEventListener("change", function () {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          imgPreview.src = e.target.result;
+          imgPreview.style.display = "block";
+        };
+        reader.readAsDataURL(file);
+      }
+    });
 
     function saveProducts() {
-      localStorage.setItem("adminProducts", JSON.stringify(products));
+      // Salvar apenas os produtos adicionados pelo admin
+      const adminOnlyProducts = allProducts.filter(p => p.id > 10);
+      localStorage.setItem("adminProducts", JSON.stringify(adminOnlyProducts));
     }
 
-    function renderTable() {
-      const tbody = document.getElementById("productTableBody");
-      tbody.innerHTML = "";
-      products.forEach((p, i) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${p.name}</td>
-          <td>R$ ${parseFloat(p.price).toFixed(2)}</td>
-          <td>${p.category}</td>
-          <td>${p.promo ? "Sim" : "Não"}</td>
-          <td class="actions">
-            <button onclick="editProduct(${i})">✏️ Editar</button>
-            <button onclick="deleteProduct(${i})">🗑️ Excluir</button>
-          </td>
+    function updateStats() {
+      const totalProducts = allProducts.length;
+      const promoProducts = allProducts.filter(p => p.promo).length;
+      
+      document.getElementById("totalProducts").textContent = totalProducts;
+      document.getElementById("promoProducts").textContent = promoProducts;
+    }
+
+    function renderProductsByCategory() {
+      const categories = {
+        'blusas': { name: '👚 Blusas', products: [] },
+        'calcas': { name: '👖 Calças', products: [] },
+        'saias': { name: '👗 Saias', products: [] },
+        'vestidos': { name: '💃 Vestidos', products: [] },
+        'acessorios': { name: '💎 Acessórios', products: [] }
+      };
+
+      // Organizar produtos por categoria
+      allProducts.forEach(product => {
+        if (categories[product.category]) {
+          categories[product.category].products.push(product);
+        }
+      });
+
+      const container = document.getElementById("categoriesContainer");
+      container.innerHTML = "";
+
+      Object.keys(categories).forEach(categoryKey => {
+        const category = categories[categoryKey];
+        const categoryDiv = document.createElement("div");
+        categoryDiv.className = "category-section";
+
+        const categoryHeader = document.createElement("div");
+        categoryHeader.className = "category-header";
+        categoryHeader.innerHTML = `
+          <h3>${category.name}</h3>
+          <div class="category-count">${category.products.length} produtos</div>
         `;
-        tbody.appendChild(row);
+
+        const productsGrid = document.createElement("div");
+        productsGrid.className = "products-grid";
+
+        if (category.products.length === 0) {
+          productsGrid.innerHTML = `
+            <div class="empty-category">
+              Nenhum produto nesta categoria ainda
+            </div>
+          `;
+        } else {
+          category.products.forEach(product => {
+            const productCard = document.createElement("div");
+            productCard.className = "product-card";
+            productCard.innerHTML = `
+              <img src="${product.img}" alt="${product.name}" class="product-image" onerror="this.src='https://via.placeholder.com/300x150?text=Sem+Imagem'">
+              <div class="product-info">
+                <h4>${product.name}</h4>
+                <div class="product-price">R$ ${parseFloat(product.price).toFixed(2)}</div>
+                ${product.promo ? '<span class="product-promo">🔥 Em Promoção</span>' : ''}
+                <div class="product-actions">
+                  <button class="btn-edit" onclick="editProduct(${product.id})">✏️ Editar</button>
+                  <button class="btn-delete" onclick="deleteProduct(${product.id})">🗑️ Excluir</button>
+                </div>
+              </div>
+            `;
+            productsGrid.appendChild(productCard);
+          });
+        }
+
+        categoryDiv.appendChild(categoryHeader);
+        categoryDiv.appendChild(productsGrid);
+        container.appendChild(categoryDiv);
       });
     }
 
-    function editProduct(index) {
-      const p = products[index];
-      document.getElementById("editId").value = index;
-      document.getElementById("name").value = p.name;
-      document.getElementById("price").value = p.price;
-      document.getElementById("category").value = p.category;
-      document.getElementById("img").value = p.img;
-      document.getElementById("promo").checked = p.promo;
+    function editProduct(id) {
+      const product = allProducts.find(p => p.id === id);
+      if (!product) return;
+
+      document.getElementById("editId").value = id;
+      document.getElementById("name").value = product.name;
+      document.getElementById("price").value = product.price;
+      document.getElementById("category").value = product.category;
+      document.getElementById("promo").checked = product.promo;
+      
+      if (product.img) {
+        imgPreview.src = product.img;
+        imgPreview.style.display = "block";
+      }
+
+      // Scroll para o formulário
+      document.querySelector(".form-section").scrollIntoView({ behavior: 'smooth' });
     }
 
-    function deleteProduct(index) {
-      if (confirm("Tem certeza que deseja excluir este produto?")) {
-        products.splice(index, 1);
+    function deleteProduct(id) {
+      const product = allProducts.find(p => p.id === id);
+      if (!product) return;
+
+      if (confirm(`Tem certeza que deseja excluir "${product.name}"?`)) {
+        allProducts = allProducts.filter(p => p.id !== id);
         saveProducts();
-        renderTable();
+        renderProductsByCategory();
+        updateStats();
       }
     }
 
+    // Formulário de produtos
     document.getElementById("productForm").addEventListener("submit", function(e) {
       e.preventDefault();
+      
       const id = document.getElementById("editId").value;
       const name = document.getElementById("name").value.trim();
       const price = parseFloat(document.getElementById("price").value);
-      const category = document.getElementById("category").value.trim();
-      const img = document.getElementById("img").value.trim();
+      const category = document.getElementById("category").value;
       const promo = document.getElementById("promo").checked;
+      const img = imgPreview.src || "https://via.placeholder.com/300x150?text=Sem+Imagem";
+
+      if (!name || !price || !category) {
+        alert("Preencha todos os campos obrigatórios!");
+        return;
+      }
 
       const product = { name, price, category, img, promo };
 
       if (id === "") {
-        products.push(product);
+        // Novo produto
+        const maxId = Math.max(...allProducts.map(p => p.id), 0);
+        product.id = maxId + 1;
+        allProducts.push(product);
       } else {
-        products[id] = product;
+        // Editar produto existente
+        const index = allProducts.findIndex(p => p.id == id);
+        if (index !== -1) {
+          allProducts[index] = { ...product, id: parseInt(id) };
+        }
       }
 
       saveProducts();
-      renderTable();
+      renderProductsByCategory();
+      updateStats();
+      
+      // Limpar formulário
       this.reset();
+      imgPreview.style.display = "none";
       document.getElementById("editId").value = "";
+      
+      alert(id === "" ? "Produto adicionado com sucesso!" : "Produto atualizado com sucesso!");
     });
 
-    function exportarCSV() {
-      const users = JSON.parse(localStorage.getItem("users")) || [];
-      if (users.length === 0) {
-        alert("Nenhum usuário cadastrado para exportar.");
-        return;
-      }
-
-      let csv = "Nome,CPF,Nascimento,Email,Senha,Cidade,Estado,Rua,Número,CEP\n";
-      users.forEach(user => {
-        const { name, cpf, birthdate, email, password, endereco } = user;
-        csv += `${name},${cpf},${birthdate},${email},${endereco.cidade},${endereco.estado},${endereco.rua},${endereco.numero},${endereco.cep}\n`;
-      });
-
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.setAttribute("href", url);
-      link.setAttribute("download", "usuarios.csv");
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-
-    renderTable();
+    // Inicializar página
+    renderProductsByCategory();
+    updateStats();
   </script>
 </body>
 </html>
