@@ -99,30 +99,40 @@
       }
     });
   </script>
-  <script>
+    <script>
     const user = JSON.parse(localStorage.getItem("currentUser"));
     const greetingEl = document.getElementById("userGreeting");
     const logoutBtn = document.getElementById("logoutBtn");
-  
+    const loginBtn = document.getElementById("loginBtn"); // Adicione esta linha
+    const registerBtn = document.getElementById("registerBtn"); // Adicione esta linha
+
     if (user) {
       greetingEl.innerText = `Olá, ${user.name.split(" ")[0]}!`;
       logoutBtn.style.display = "inline-block";
+      // Adicione estas linhas para ocultar os botões de login/registro
+      if (loginBtn) loginBtn.style.display = "none";
+      if (registerBtn) registerBtn.style.display = "none";
+    } else {
+      // Garante que os botões apareçam se não houver usuário logado
+      if (loginBtn) loginBtn.style.display = "inline-block";
+      if (registerBtn) registerBtn.style.display = "inline-block";
     }
-  
+
     logoutBtn.addEventListener("click", () => {
       localStorage.removeItem("loggedIn");
       localStorage.removeItem("currentUser");
       alert("Você saiu da sua conta.");
       window.location.reload();
     });
-    if (user && user.role === "gerente") {
-  document.getElementById("adminBtn").style.display = "inline-block";
-  document.getElementById("adminBtn").addEventListener("click", () => {
-    window.location.href = "crud.html";
-  });
-}
 
+    if (user && user.role === "gerente") {
+      document.getElementById("adminBtn").style.display = "inline-block";
+      document.getElementById("adminBtn").addEventListener("click", () => {
+        window.location.href = "crud.html";
+      });
+    }
   </script>
+
   
 </body>
 </html>
