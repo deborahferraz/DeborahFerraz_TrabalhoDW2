@@ -74,44 +74,80 @@
   </div>
 
   <script>
-    function register() {
-      const name = document.getElementById("name").value.trim();
-      const cpf = document.getElementById("cpf").value.trim();
-      const birthdate = document.getElementById("birthdate").value;
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value;
-      const cidade = document.getElementById("cidade").value.trim();
-      const estado = document.getElementById("estado").value;
-      const rua = document.getElementById("rua").value.trim();
-      const numero = document.getElementById("numero").value.trim();
-      const cep = document.getElementById("cep").value.trim();
-  
-      const letrasRegex = /^[A-Za-zÀ-ÿ\\s]+$/;
-      const numerosRegex = /^[0-9]+$/;
-  
-      if (!letrasRegex.test(name)) return alert("Nome só pode conter letras e espaços.");
-      if (!numerosRegex.test(cpf) || cpf.length !== 11) return alert("CPF deve conter exatamente 11 números.");
-      if (!letrasRegex.test(cidade)) return alert("Cidade deve conter apenas letras.");
-      if (!letrasRegex.test(rua)) return alert("Rua deve conter apenas letras.");
-      if (!numerosRegex.test(cep) || cep.length !== 8) return alert("CEP deve conter exatamente 8 números.");
-      if (!email || !password || !birthdate || !estado || !numero) return alert("Preencha todos os campos obrigatórios.");
-  
-      const users = JSON.parse(localStorage.getItem("users")) || [];
-      if (users.some(user => user.email === email)) return alert("Este e-mail já está cadastrado!");
-  
-      const role = email === "admin@pixelpeach.com" ? "gerente" : "cliente";
-  
-      const newUser = {
-        name, cpf, birthdate, email, password, role,
-        endereco: { cidade, estado, rua, numero, cep }
-      };
-  
-      users.push(newUser);
-      localStorage.setItem("users", JSON.stringify(users));
-      alert("Conta criada com sucesso!");
-      window.location.href = "login.html";
+  function register() {
+    const name = document.getElementById("name").value.trim();
+    const cpf = document.getElementById("cpf").value.trim();
+    const birthdate = document.getElementById("birthdate").value;
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    const cidade = document.getElementById("cidade").value.trim();
+    const estado = document.getElementById("estado").value; // Este é o campo que estamos ajustando
+    const rua = document.getElementById("rua").value.trim();
+    const numero = document.getElementById("numero").value.trim();
+    const cep = document.getElementById("cep").value.trim();
+
+    // Regex para nomes: permite letras, espaços, apóstrofos e hífens
+    const nameRegex = /^[A-Za-zÀ-ÿ\s'-]+$/;
+    // Regex para partes de endereço (cidade, rua): permite letras, números, espaços, vírgulas, pontos e hífens
+    const addressPartRegex = /^[A-Za-zÀ-ÿ0-9\s.,-]+$/;
+    // Regex para números (CPF, CEP): apenas dígitos
+    const numerosRegex = /^[0-9]+$/;
+    // Regex para número da casa: permite letras, números, espaços e hífens (ex: "123A", "S/N")
+    const numeroCasaRegex = /^[A-Za-z0-9\s-]+$/;
+
+    // Validações
+    if (!nameRegex.test(name)) {
+      alert("Nome inválido. Use apenas letras, espaços, apóstrofos e hífens.");
+      return;
     }
-  </script>
-  
+    if (!numerosRegex.test(cpf) || cpf.length !== 11) {
+      alert("CPF deve conter exatamente 11 números.");
+      return;
+    }
+    if (!addressPartRegex.test(cidade)) {
+      alert("Cidade inválida. Use apenas letras, números, espaços e caracteres como ',', '.', '-'.");
+      return;
+    }
+    if (!addressPartRegex.test(rua)) {
+      alert("Rua inválida. Use apenas letras, números, espaços e caracteres como ',', '.', '-'.");
+      return;
+    }
+    if (!numeroCasaRegex.test(numero)) {
+      alert("Número do endereço inválido. Use apenas letras, números, espaços e hífens.");
+      return;
+    }
+    if (!numerosRegex.test(cep) || cep.length !== 8) {
+      alert("CEP deve conter exatamente 8 números.");
+      return;
+    }
+
+    // Validação de campos obrigatórios que não são cobertos pelas regex acima
+    // AQUI ESTÁ A MUDANÇA: estado === "" em vez de !estado
+    if (!email || !password || !birthdate || estado === "") {
+      alert("Preencha todos os campos obrigatórios.");
+      return;
+    }
+
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    if (users.some(user => user.email === email)) {
+      alert("Este e-mail já está cadastrado!");
+      return;
+    }
+
+    const role = email.endsWith("@pixelpeach.com") ? "gerente" : "cliente";
+
+
+    const newUser = {
+      name, cpf, birthdate, email, password, role,
+      endereco: { cidade, estado, rua, numero, cep }
+    };
+
+    users.push(newUser);
+    localStorage.setItem("users", JSON.stringify(users));
+    alert("Conta criada com sucesso!");
+    window.location.href = "login.html";
+  }
+</script>
+
 </body>
 </html>
